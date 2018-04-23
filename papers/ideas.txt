@@ -1,0 +1,78 @@
+                           __________________
+
+                            PROJECT - TELER
+
+                            Zachary J. Susag
+                           __________________
+
+
+Table of Contents
+_________________
+
+1 Problems
+2 Approach
+3 Strategies
+4 Implementation Plan
+
+
+1 Problems
+==========
+
+  - VCSs are too complex for the common use case of pushing and pulling
+    from a remote
+  - VCSs like git have a somewhat steep learning curve to showcase all
+    of the power
+    - Students rarely learn how to use git aside from the following
+      commands:
+      1) git add .
+      2) git commit -m "msg"
+      3) git push
+      4) git pull
+  - Staging area obscures basic function of git which is a
+    synchronization platform with timestamping/messaging functionality
+  - To actually push or pull something through git 5 commands are
+    performed in total: add, commit, push for pushing which are all
+    required for the desired behavior. Pulling from git is actually two
+    commands: fetch and merge. This asymmetry from having to pull out
+    the pushes, and squashing the pulling is undesireable
+    - It should be at least symmetric in design for ease of
+      understanding
+  - As a result git repositories can get desynchronized with the remote
+    due to merge conflicts, incomplete adds, stuck in vim while trying
+    to add messages, difficulty to revert to previous commits and back
+    again.
+
+
+2 Approach
+==========
+
+  - Create a minimal, distributed VCS which centers around the use of
+    only two main commands: the push/pull operation
+    - Since this is the main functionality that students use we believe
+      it should be steamlined, accessible, and straight forward.
+  - That said, more powerful options will be available through the use
+    of command line arguments.
+    - Such examples are adding only certain files to what will be
+      pushed, adding multiple remotes, possibly branching, reverting to
+      previous commits
+
+
+3 Strategies
+============
+
+  1) Networking
+     - Teler will be a distributed VCS meaning that the full codebase
+       and history are mirrored on the developers computer. This makes
+       it possible to use Teler without a central server.
+     - Teler will be able to send and receive updates to the repository
+       to arbitrary locations where the same repo is stored, just like
+       git.
+  2) Persistent Storage
+     - We will be relying heavily on inodes, diffs, filesystems, etc. A
+       crucial part of a VCS is tagging differences in code
+
+
+4 Implementation Plan
+=====================
+
+  - 
