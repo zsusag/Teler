@@ -9,14 +9,19 @@
 Table of Contents
 _________________
 
-1 Problems
-2 Approach
-3 Strategies
-4 Implementation Plan
+1 Proposal
+.. 1.1 Problems
+.. 1.2 Approach
+.. 1.3 Strategies
+.. 1.4 Implementation Plan
+2 Useful Websites
 
 
-1 Problems
+1 Proposal
 ==========
+
+1.1 Problems
+~~~~~~~~~~~~
 
   - VCSs are too complex for the common use case of pushing and pulling
     from a remote
@@ -43,8 +48,8 @@ _________________
     again.
 
 
-2 Approach
-==========
+1.2 Approach
+~~~~~~~~~~~~
 
   - Create a minimal, distributed VCS which centers around the use of
     only two main commands: the push/pull operation
@@ -57,8 +62,8 @@ _________________
       previous commits
 
 
-3 Strategies
-============
+1.3 Strategies
+~~~~~~~~~~~~~~
 
   1) Networking
      - Teler will be a distributed VCS meaning that the full codebase
@@ -72,7 +77,37 @@ _________________
        crucial part of a VCS is tagging differences in code
 
 
-4 Implementation Plan
-=====================
+1.4 Implementation Plan
+~~~~~~~~~~~~~~~~~~~~~~~
 
-  - 
+
+2 Useful Websites
+=================
+
+  - [Git Is Simpler Than You Think]
+  - [GitMagic @ Stanford]
+  - [Inner Workings of Git @ IBM]
+  - [How Does Git Merge Work?]
+  - [Git Compression and Deltas]
+  - [GitImmersion Internals]
+  - [Eric Sink Source Control HOWTO]
+
+
+[Git Is Simpler Than You Think]
+http:nfarina.com/post/9868516270/git-is-simpler
+
+[GitMagic @ Stanford]
+http:www-cs-students.stanford.edu/~blynn/gitmagic/ch08.html
+
+[Inner Workings of Git @ IBM]
+https:www.ibm.com/developerworks/library/d-learn-workings-git/
+
+[How Does Git Merge Work?] https:www.quora.com/How-does-Git-merge-work
+
+[Git Compression and Deltas]
+https:gist.github.com/matthewmccullough/2695758
+
+[GitImmersion Internals] http:gitimmersion.com/lab_22.html
+
+[Eric Sink Source Control HOWTO]
+http://ericsink.com/scm/source_control.html
