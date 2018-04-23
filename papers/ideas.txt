@@ -111,3 +111,5 @@ https:gist.github.com/matthewmccullough/2695758
 
 [Eric Sink Source Control HOWTO]
 http://ericsink.com/scm/source_control.html
+
+[Git User Manual] https://schacon.github.io/git/user-manual.html
