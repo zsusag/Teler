@@ -7,7 +7,7 @@
 
 const char *argp_program_version = "teler 0.0";
 
-const char *argp_program_bug_address = "<lukerhad@grinnell.edu>";
+const char *argp_program_bug_address = "<lukerhad@grinnell.edu> and/or <susagzac@grinnell.edu>";
 
 static char doc[] = "teler: a streamlined version control system";
 
@@ -63,7 +63,6 @@ int main (int argc, char **argv) {
 
   while (true) {
     if (argv[1] == NULL) {
-      puts("teler requires at least one command!");
       print_basic_usage();
       break;
     } else if (!strncmp(argv[1], "pull", 4)) {
