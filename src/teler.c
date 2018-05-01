@@ -4,77 +4,95 @@
 #include <stdlib.h>  // for exit()
 #include <string.h>  // for strncmp()
 
-static struct option pull_options[] =
+const char *argp_program_version = "teler 0.0";
+
+const char *argp_program_bug_address = "<lukerhad@grinnell.edu>";
+
+static char doc[] = "teler: a streamlined version control system";
+
+static struct argp_option pull_options[] =
   {
-    {"files", required_argument, 0, 'x'},
-    {"from",  required_argument, 0, 'f'},
-    {0,       0,                 0, 0}
+    {"files", 'x', "files", 0, "Pull specific files"},
+    {"from",  'f', "repo",  0, "Pull from a specific repo"},
+    {0}
   };
 
-static struct option push_options[] =
+static struct argp_option push_options[] =
   {
-    {"files", required_argument, 0, 'x'},
-    {"to",    required_argument, 0, 't'},
-    {0,       0,                 0, 0}
+    {"files", 'x', "files", 0, "Push specific files"},
+    {"to",    't', "repo",  0, "Push to a specific repo"},
+    {0}
   };
+
+struct arguments {
+  char *args[2];
+  char *repo;
+  char *files; // TODO: array
+};
+
+static error_t parse_opt(int key, char *arg, struct argp_state *state) {
+  struct arguments *arguments = state->input;
+  switch (key) {
+    case 'x':
+      arguments->files = arg;
+      puts(arguments->files);
+      break;
+    case 'f': case 't':
+      arguments->repo = arg;
+      puts(arguments->repo);
+      break;
+    case ARGP_KEY_ARG:
+      puts("too many args");
+      break;
+    default:
+      return ARGP_ERR_UNKNOWN;
+  }
+  return 0;
+}
+
+static struct argp pull_argp = { pull_options, parse_opt, 0, doc };
+static struct argp push_argp = { push_options, parse_opt, 0, doc };
+
+void print_basic_usage();
 
 int main (int argc, char **argv) {
+  struct arguments arguments;
+  arguments.repo = "-";
+  arguments.files = "-";
+
   while (true) {
     if (argv[1] == NULL) {
       puts("teler requires at least one command!");
+      print_basic_usage();
       break;
     } else if (!strncmp(argv[1], "pull", 4)) {
-      puts("Hello dev. Pull stuff goes here!");
+      argp_parse(&pull_argp, argc-1, argv+1, 0, 0, &arguments);
       break;
     } else if (!strncmp(argv[1], "push", 4)) {
-      puts("Hello dev. Push stuff goes here!");
+      argp_parse(&push_argp, argc-1, argv+1, 0, 0, &arguments);
       break;
     } else {
       printf("%s is not a command.\n", argv[1]);
+      print_basic_usage();
       break;
     }
-
-    /*     int opt = getopt_long(argc, argv, "sg", options, &option_index); */
-
-    /*     /\* Detect the end of the options. *\/ */
-    /*     if (opt == -1) */
-    /*       break; */
-
-    /*     switch (opt) { */
-    /*       case 0: */
-    /*         /\* If this option set a flag, do nothing else now. *\/ */
-    /*         if (options[option_index].flag != 0) */
-    /*           break; */
-    /*         printf("option %s", options[option_index].name); */
-    /*         if (optarg) */
-    /*           printf(" with arg %s", optarg); */
-    /*         printf("\n"); */
-    /*         break; */
-
-    /*       case 'g': */
-    /*         puts("option -g\n"); */
-    /*         break; */
-
-    /*       case 's': */
-    /*         puts ("option -s\n"); */
-    /*         break; */
-
-    /*       case '?': */
-    /*         /\* getopt_long already printed an error message. *\/ */
-    /*         break; */
-
-    /*       default: */
-    /* 	  perror("getopt: This should never happen..."); */
-    /*         exit(EXIT_FAILURE); */
-    /*       } */
-    /*   } */
-
-    /* /\* Print any remaining command line arguments (not options). *\/ */
-    /* if (optind < argc) { */
-    /*     printf ("non-option ARGV-elements: "); */
-    /*     while (optind < argc) */
-    /*       printf("%s ", argv[optind++]); */
-    /*     putchar('\n'); */
   }
-  exit(0);
+
+  /* TODO: Use the information contained in "arguments" to send commands to
+  backend. */
+
+  return EXIT_SUCCESS;
+}
+
+void print_basic_usage() {
+  puts("Usage: teler <command>");
+  puts("teler: a streamlined version control system");
+  puts("");
+  puts("Commands");
+  puts("\tpull\tPull all your data from your default repo");
+  puts("\t\t-f, --from=repo\t\tPull from a specific repo");
+  puts("\t\t-x, --files=files\tPull specific files");
+  puts("\tpush\tPush all your data of your default repo");
+  puts("\t\t-t, --to=repo\t\tPush to a specific repo");
+  puts("\t\t-x, --files=files\tPush specific files");
 }
