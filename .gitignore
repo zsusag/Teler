@@ -1,4 +1,7 @@
 ### C ###
+# Bin Directory
+bin/
+
 # Prerequisites
 *.d
 
