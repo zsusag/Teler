@@ -3,5 +3,7 @@
 
 #define RWX_OWNER_PERM 0755
 
+// Initialize an empty teler repository
+void teler_init();
 
 #endif

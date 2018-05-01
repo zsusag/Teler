@@ -4,6 +4,8 @@
 #include <stdlib.h>  // for exit()
 #include <string.h>  // for strncmp()
 
+#include "teler.h"
+
 static struct option pull_options[] =
   {
     {"files", required_argument, 0, 'x'},
@@ -76,5 +78,6 @@ int main (int argc, char **argv) {
     /*       printf("%s ", argv[optind++]); */
     /*     putchar('\n'); */
   }
+  teler_init();
   exit(0);
 }
