@@ -72,7 +72,3 @@ void teler_init() {
   }
   free(cwd);
 }
-
-int main() {
-  teler_init();
-}

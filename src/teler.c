@@ -3,7 +3,9 @@
 #include <stdio.h>   // for puts()
 #include <stdlib.h>  // for exit()
 #include <string.h>  // for strncmp()
+#include <teler.h>
 
+<<<<<<< HEAD
 const char *argp_program_version = "teler 0.0";
 
 const char *argp_program_bug_address = "<lukerhad@grinnell.edu>";
@@ -11,6 +13,11 @@ const char *argp_program_bug_address = "<lukerhad@grinnell.edu>";
 static char doc[] = "teler: a streamlined version control system";
 
 static struct argp_option pull_options[] =
+=======
+#include "teler.h"
+
+static struct option pull_options[] =
+>>>>>>> b89743982faf55ecb9d1f0f1f9de3d567137d8d1
   {
     {"files", 'x', "files", 0, "Pull specific files"},
     {"from",  'f', "repo",  0, "Pull from a specific repo"},
@@ -84,6 +91,7 @@ int main (int argc, char **argv) {
   return EXIT_SUCCESS;
 }
 
+<<<<<<< HEAD
 void print_basic_usage() {
   puts("Usage: teler <command>");
   puts("teler: a streamlined version control system");
@@ -95,4 +103,15 @@ void print_basic_usage() {
   puts("\tpush\tPush all your data of your default repo");
   puts("\t\t-t, --to=repo\t\tPush to a specific repo");
   puts("\t\t-x, --files=files\tPush specific files");
+=======
+    /* /\* Print any remaining command line arguments (not options). *\/ */
+    /* if (optind < argc) { */
+    /*     printf ("non-option ARGV-elements: "); */
+    /*     while (optind < argc) */
+    /*       printf("%s ", argv[optind++]); */
+    /*     putchar('\n'); */
+  }
+  teler_init();
+  exit(0);
+>>>>>>> b89743982faf55ecb9d1f0f1f9de3d567137d8d1
 }
