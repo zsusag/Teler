@@ -1,6 +1,9 @@
 #Compiler and Linker
 CC          := clang
 
+#The remover
+RM          := rm
+
 #The Target Binary Program
 TARGET      := teler
 
@@ -14,7 +17,7 @@ OBJEXT      := o
 
 #Flags, Libraries and Includes
 CFLAGS      := -Wall -O3 -g
-LIB         := 
+LIB         := -lssl -lcrypto
 
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
