@@ -71,6 +71,9 @@ int main (int argc, char **argv) {
     } else if (!strncmp(argv[1], "push", 4)) {
       argp_parse(&push_argp, argc-1, argv+1, 0, 0, &arguments);
       break;
+    } else if (!strncmp(argv[1], "init", 4)) {
+      teler_init();
+      break;
     } else {
       printf("%s is not a command.\n", argv[1]);
       print_basic_usage();
@@ -80,7 +83,6 @@ int main (int argc, char **argv) {
 
   /* TODO: Use the information contained in "arguments" to send commands to
   backend. */
-  teler_init();
   return EXIT_SUCCESS;
 }
 

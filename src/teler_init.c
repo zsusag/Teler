@@ -14,7 +14,7 @@
 /* Things that init should do:
    1) Create an empty .teler directory in the current working directory
    2) Put an initial commit with nothing in it
-   */
+*/
 
 void teler_init() {
   // Retrieve the name of the current working directory
