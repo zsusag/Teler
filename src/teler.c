@@ -3,6 +3,7 @@
 #include <stdio.h>   // for puts()
 #include <stdlib.h>  // for exit()
 #include <string.h>  // for strncmp()
+
 #include "teler.h"
 
 const char *argp_program_version = "teler 0.0";
@@ -77,10 +78,10 @@ int main (int argc, char **argv) {
     } else {
       printf("%s is not a command.\n", argv[1]);
       print_basic_usage();
+      //return EXIT_FAILURE;
       break;
     }
-  }
-
+  }  
   /* TODO: Use the information contained in "arguments" to send commands to
   backend. */
   return EXIT_SUCCESS;
