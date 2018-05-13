@@ -17,7 +17,7 @@
  *
  * \returns hash       The hash of the key which is an index into the table
  */
-size_t hash_fn(const unsigned char* key, unsigned int salt, size_t capacity){
+size_t hash_fn(const char* key, unsigned int salt, size_t capacity){
   unsigned int h = salt;
   while(*key){
     h = h*101 + (unsigned int)*key++;
@@ -75,7 +75,7 @@ void hash_map_destroy(hash_map_t* hash_map) {
  * \param key             The key of the entry
  * \param value           The value associated with the key in the entry
  */
-void hash_map_set(hash_map_t* hash_map, const unsigned char* key, metadata_t* val) {
+void hash_map_set(hash_map_t* hash_map, const char* key, metadata_t* val) {
   size_t hash = hash_fn(key, hash_map->salt, hash_map->capacity);
   // If the key was not in the table then increment the size
   if(list_insert(&hash_map->table[hash], key, val)) {
@@ -98,7 +98,7 @@ void hash_map_set(hash_map_t* hash_map, const unsigned char* key, metadata_t* va
  * \returns bool          True if a value associated with the key is found;
  *                        false if not.
  */
-bool hash_map_contains(hash_map_t* hash_map, const unsigned char* key) {
+bool hash_map_contains(hash_map_t* hash_map, const char* key) {
   size_t hash = hash_fn(key, hash_map->salt, hash_map->capacity);
   return list_lookup(&hash_map->table[hash], key) != NULL;
 }
@@ -114,7 +114,7 @@ bool hash_map_contains(hash_map_t* hash_map, const unsigned char* key) {
  * \returns val           The value associated with the given key. -1
  *                        if a value was not found for the given key.
  */
-metadata_t* hash_map_get(hash_map_t* hash_map, const unsigned char* key) {
+metadata_t* hash_map_get(hash_map_t* hash_map, const char* key) {
   size_t hash = hash_fn(key, hash_map->salt, hash_map->capacity);
   return list_lookup(&hash_map->table[hash], key);
 }
@@ -128,7 +128,7 @@ metadata_t* hash_map_get(hash_map_t* hash_map, const unsigned char* key) {
  * \param hash_map        A hash map
  * \param key             A key to remove from the table
  */
-void hash_map_remove(hash_map_t* hash_map, const unsigned char* key) {
+void hash_map_remove(hash_map_t* hash_map, const char* key) {
   size_t hash = hash_fn(key, hash_map->salt, hash_map->capacity);
   // If an entry associated with the given key was found, decrement the size
   if(list_remove(&hash_map->table[hash], key)) {
@@ -165,4 +165,3 @@ void hash_map_grow(hash_map_t* hash_map) {
     list_destroy(&old_table[i]);
   }
 }
-

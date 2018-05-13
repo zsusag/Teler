@@ -5,22 +5,6 @@
 #include "hash_map.h"
 
 /**
- * This function will compare two different hashes
- */
-int hashcmp(const unsigned char* h1, const unsigned char* h2) {
-  const unsigned char* cur1 = h1;
-  const unsigned char* cur2 = h2;
-  while(*cur1 != 0 && *cur2 != 0) {
-    if(*cur1 != *cur2) {
-      return -1;
-    }
-    cur1++;
-    cur2++;
-  }
-  return 0;
-}
-
-/**
  * This function will initialize a linked list.
  *
  * \param l               A pointer to a linked list with preallocated memory
@@ -34,13 +18,13 @@ void list_init(list_t* l) {
  * given that an entry with the given key doesn't already exist. If an entry does
  * exist, then the value is replaced with the new value.
  */
-bool list_insert(list_t* l, const unsigned char* key, metadata_t* val) {
+bool list_insert(list_t* l, const char* key, metadata_t* val) {
   /* Search to see if the key is already in
      the bucket. If it is, set its value to val
      and return. */
   node_t* cur = l->head;
   while(cur != NULL) {
-    if(hashcmp(cur->key,key) == 0) {
+    if(strcmp(cur->key,key) == 0) {
       cur->val = val;
       return false;
     }
@@ -71,13 +55,13 @@ bool list_insert(list_t* l, const unsigned char* key, metadata_t* val) {
  * \returns               The value associated with the given key. If such a
  *                        value was not found, -1 is returned.
  */
-metadata_t* list_lookup(list_t* l, const unsigned char* key) {
+metadata_t* list_lookup(list_t* l, const char* key) {
   node_t* cur = l->head;
   /* Traverse the list until either the end of the list is hit or
      the given key was found in the list. */
   while(cur != NULL) {
     // If the key was found, return the value.
-    if(hashcmp(cur->key,key) == 0) {
+    if(strcmp(cur->key,key) == 0) {
       metadata_t* ret = cur->val;
       return ret;
     }
@@ -93,18 +77,18 @@ metadata_t* list_lookup(list_t* l, const unsigned char* key) {
  *
  * \param l               A pointer to a linked list
  * \param key             The search key
- *
+ *p
  * \returns               True if the key was found in the table, and thus
  *                        removed or false if the key wasn't found.
  */
-bool list_remove(list_t* l, const unsigned char* key) {
+bool list_remove(list_t* l, const char* key) {
   node_t* cur = l->head;
   node_t* prev = NULL;
 
   /* If head is the node to be deleted then
      set the head equal to the next element in the list,
      free the deleted element, unlock, and return. */
-  if(cur != NULL && hashcmp(cur->key,key) == 0) {
+  if(cur != NULL && strcmp(cur->key,key) == 0) {
     l->head = cur->next;
     free(cur);
     return true;
@@ -113,7 +97,7 @@ bool list_remove(list_t* l, const unsigned char* key) {
   /* Iterate through the list until we either
      reach the end of the list or we found
      the node to be removed. */
-  while(cur != NULL && hashcmp(cur->key,key) != 0) {
+  while(cur != NULL && strcmp(cur->key,key) != 0) {
     prev = cur;
     cur = cur->next;
   }

@@ -31,7 +31,7 @@ extern "C" {
    * A node structure to hold key, permissions, filename, and type
    */
   typedef struct node {
-    const unsigned char* key; // The hash of the blob
+    const char* key; // The hash of the blob
     metadata_t* val;
     struct node* next;
   } node_t;
@@ -64,16 +64,16 @@ extern "C" {
   void hash_map_destroy(hash_map_t* hash_map);
 
   // Set a value in a hash map
-  void hash_map_set(hash_map_t* hash_map, const unsigned char* key, metadata_t* value);
+  void hash_map_set(hash_map_t* hash_map, const char* key, metadata_t* value);
 
   // Check if a hash map contains a key
-  bool hash_map_contains(hash_map_t* hash_map, const unsigned char* key);
+  bool hash_map_contains(hash_map_t* hash_map, const char* key);
 
   // Get a value in a hash map
-  metadata_t* hash_map_get(hash_map_t* hash_map, const unsigned char* key);
+  metadata_t* hash_map_get(hash_map_t* hash_map, const char* key);
 
   // Remove a value from a hash map
-  void hash_map_remove(hash_map_t* hash_map, const unsigned char* key);
+  void hash_map_remove(hash_map_t* hash_map, const char* key);
 
   // Grow a hash map to double its size
   void hash_map_grow(hash_map_t* hash_map);
@@ -84,14 +84,14 @@ extern "C" {
   /* Insert a key,value pair into the list, updating the value
      if a node with the given key is already present. Returns
      true if a new node was created*/
-  bool list_insert(list_t* l, const unsigned char* key, metadata_t* val);
+  bool list_insert(list_t* l, const char* key, metadata_t* val);
 
   /* Retrieve a value from the list which corresponds to a given key.
      Returns NULL if a value associated with the given key is not found. */
-  metadata_t* list_lookup(list_t* l, const unsigned char* key);
+  metadata_t* list_lookup(list_t* l, const char* key);
 
   // Remove a node from the list which contains the given key.
-  bool list_remove(list_t* l, const unsigned char* key);
+  bool list_remove(list_t* l, const char* key);
 
   // Destroy an entire linked list (bucket)
   void list_destroy(list_t* l);
