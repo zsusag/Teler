@@ -7,6 +7,9 @@
 #include <sys/types.h>
 #include <string.h>
 
+#include "data_structures/hash_map/hash_map.h"
+
+
 // Define different areas within the shadow directory
 #define SHADOW_DIR "/.teler/"
 #define OBJECTS_DIR "/.teler/objects/"
@@ -97,4 +100,12 @@ void open_object_file(FILE **fp, char* object, char* mode) {
 
   // Free the constructed path name
   free(object_path);
+}
+
+type_t convert_to_type(char* type) {
+  if(strncmp(type, "blob", 4) == 0) {
+    return blob;
+  } else {
+    return tree;
+  }
 }
