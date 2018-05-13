@@ -1,11 +1,10 @@
-#include "hash_map.h"
-
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <stdio.h>
 
+#include "hash_map.h"
 /**
  * This hash function will hash a given key, starting with a salt
  * and return an index into a hash table, bounded by the capacity.

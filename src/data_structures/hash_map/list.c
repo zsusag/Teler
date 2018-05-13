@@ -1,8 +1,8 @@
-#include "hash_map.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "hash_map.h"
 
 /**
  * This function will compare two different hashes
