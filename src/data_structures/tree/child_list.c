@@ -26,7 +26,7 @@ void clist_destroy(clist_t* c) {
 }
 
 // Insert an element into a child list
-void clist_insert(clist_t* c, unsigned char* child_hash) {
+void clist_insert(clist_t* c, char* child_hash) {
   // Allocate memory for a cnode and a tnode
   cnode_t* new_node = (cnode_t*) malloc(sizeof(cnode_t));
   tnode_t* child = (tnode_t*) malloc(sizeof(tnode_t));

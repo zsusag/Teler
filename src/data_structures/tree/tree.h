@@ -14,7 +14,7 @@ typedef struct cnode cnode_t;
 typedef struct clist clist_t;
 
 struct tnode {
-  unsigned char* hash;
+  char* hash;
   clist_t* children;
 };
 
@@ -28,13 +28,13 @@ struct clist {
 };
 
 // Initialize a directory tree
-void dirtree_init(tnode_t* t, unsigned char* hash);
+void dirtree_init(tnode_t* t);
 
 // Destroy a directory tree
 void dirtree_destroy(tnode_t* t);
 
 // Insert a child into the directory tree
-void dirtree_insert(tnode_t* t, unsigned char* child_hash);
+void dirtree_insert(tnode_t* t, char* child_hash);
 
 // Traverse a directory tree, printing it out into the shadow directory
 void dirtree_traverse(tnode_t* t);
@@ -46,7 +46,7 @@ void clist_init(clist_t* c);
 void clist_destroy(clist_t* c);
 
 // Insert an element into a child list
-void clist_insert(clist_t* c, unsigned char* child_hash);
+void clist_insert(clist_t* c, char* child_hash);
 
 
 
