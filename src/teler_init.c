@@ -9,8 +9,6 @@
 
 #include "teler.h"
 
-#define SHADOW_DIR "/.teler/"
-
 /* Things that init should do:
    1) Create an empty .teler directory in the current working directory
    2) Put an initial commit with nothing in it
