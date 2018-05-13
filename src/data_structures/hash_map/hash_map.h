@@ -12,6 +12,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+  /**
+   * An enumeration of the different types an object can bew  
+   */
+  typedef enum type {
+    blob, tree
+  } type_t;
 
   /**
    * A struct to hold all of metadata for a given file
@@ -19,7 +25,7 @@ extern "C" {
   typedef struct metadata {
     mode_t perm; // Permission of file
     char* filename; // The human-readable filename
-    char* type; // Type of the file
+    type_t type; // Type of the file
   } metadata_t;
   /**
    * A node structure to hold key, permissions, filename, and type
