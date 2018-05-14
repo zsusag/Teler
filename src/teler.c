@@ -3,9 +3,10 @@
 #include <stdio.h>   // for puts()
 #include <stdlib.h>  // for exit()
 #include <string.h>  // for strncmp()
+#include <time.h>
 
 #include "teler.h"
-
+#include "util.h"
 const char *argp_program_version = "teler 0.0";
 
 const char *argp_program_bug_address = "<lukerhad@grinnell.edu> and/or <susagzac@grinnell.edu>";
@@ -71,6 +72,7 @@ int main (int argc, char **argv) {
       break;
     } else if (!strncmp(argv[1], "push", 4)) {
       argp_parse(&push_argp, argc-1, argv+1, 0, 0, &arguments);
+      push();
       break;
     } else if (!strncmp(argv[1], "init", 4)) {
       teler_init();
@@ -78,7 +80,7 @@ int main (int argc, char **argv) {
     } else {
       printf("%s is not a command.\n", argv[1]);
       print_basic_usage();
-      //return EXIT_FAILURE;
+      return EXIT_FAILURE;
       break;
     }
   }  
