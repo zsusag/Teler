@@ -6,9 +6,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <string.h>
+#include <openssl/sha.h>
+#include <time.h>
 
 #include "data_structures/hash_map/hash_map.h"
-
+#include "util.h"
 
 // Define different areas within the shadow directory
 #define SHADOW_DIR "/.teler/"
@@ -16,6 +18,15 @@
 #define REFS_DIR "/.teler/refs/"
 #define HEADS_DIR "/.teler/refs/heads/"
 
+char* get_shadow_dir() {
+  char* cwd = get_current_dir_name();
+
+  cwd = (char*) realloc(cwd, strlen(cwd) + strlen(SHADOW_DIR) + 1);
+  strncat(cwd, SHADOW_DIR, strlen(SHADOW_DIR));
+  
+  return cwd;
+
+}
 
 char* get_objects_dir() {
   char* cwd = get_current_dir_name();
@@ -42,6 +53,30 @@ char* get_heads_dir() {
   strncat(cwd, HEADS_DIR, strlen(HEADS_DIR));
 
   return cwd;
+}
+
+void make_object_subdir(char* object) {
+  // Retrieve the name of the the objects directory
+  char* dir = get_objects_dir();
+
+  // Concatenate the first byte of the object
+  size_t dir_len = strlen(dir);
+  // 3 = 2 for first byte + 1 for null byte
+  dir = (char*) realloc(dir, dir_len + 3);
+  strncat(dir, object, 2);
+
+  dir[dir_len + 2] = '\0';
+
+  // Check to see if the directory has been created already, if not, create it
+  struct stat st_dir = {0};
+  if(stat(dir, &st_dir) == -1) {
+    if(mkdir(dir, RWX_OWNER_PERM) != 0) {
+      perror("Unable to create object subdirectory");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  free(dir);
 }
 
 char* get_latest_commit(char* branch) {
@@ -82,18 +117,25 @@ ssize_t readline(char **lineptr, FILE *stream)
 }
 
 void open_object_file(FILE **fp, char* object, char* mode) {
+  // Check to make sure the object subdirectory is there
+  make_object_subdir(object);
+
   char* object_path = get_objects_dir();
 
   // Grow the length of the object path to fit in subdirectory
   size_t object_len = strlen(object);
-  object_path = (char*) realloc(object_path, strlen(object_path) + object_len);
+  object_path = (char*) realloc(object_path, strlen(object_path) + object_len + 2);
 
   // Concatenate on the first byte of the object
   strncat(object_path, object, 2);
-  object_path[strlen(object_path)] = '/';
+  strncat(object_path, "/", 1);
+  //  object_path[strlen(object_path)] = '/';
 
   // Construct the remaining path
   strncat(object_path, object + 2, 38);
+
+  // Put the null byte at the end
+  object_path[strlen(object_path) + object_len] = '\0';
 
   // Open the file
   open_file(fp, object_path, mode);
@@ -108,4 +150,48 @@ type_t convert_to_type(char* type) {
   } else {
     return tree;
   }
+}
+
+void sha1_update_safe(SHA_CTX* c, const void* data, size_t len) {
+  if(SHA1_Update(c, data, len) == 0) {
+    fprintf(stderr, "Unable to update SHA1 hash\n");
+    exit(EXIT_FAILURE);
+  }
+}
+
+char* bin2hex(const unsigned char* bin, size_t len) {
+  // Check to see if bin is null or has a length of 0
+  if(bin == NULL || len == 0) {
+    return NULL;
+  }
+
+  // Allocate enough memory for the hexidecimal representation of bin
+  char* hex = (char*) malloc(2*len + 1);
+  for(size_t i = 0; i < len; i++) {
+    hex[i*2] = "0123456789abcdcef"[bin[i] >> 4];
+    hex[i*2+1] = "0123456789abcdef"[bin[i] & 0x0F];
+  }
+  hex[len*2] = '\0';
+
+  return hex;
+}
+
+char* get_timestamp() {
+  // Get the current time
+  time_t t = time(NULL);
+  if(t == ((time_t) -1)) {
+    perror("Unable to get current time");
+    exit(EXIT_FAILURE);
+  }
+
+  // Declare a struct to hold the local time and populate it
+  struct tm* lt = localtime(&t);
+  if(lt == NULL) {
+    perror("Unable to convert to localtime");
+    exit(EXIT_FAILURE);
+  }
+
+  char* ret = (char*) malloc(200);
+  strftime(ret, 200, "%s %z", lt);
+  return ret;
 }
