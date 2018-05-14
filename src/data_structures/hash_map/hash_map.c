@@ -165,3 +165,12 @@ void hash_map_grow(hash_map_t* hash_map) {
     list_destroy(&old_table[i]);
   }
 }
+
+char* enum2string(type_t t) {
+  switch(t) {
+  case tree:
+    return "tree";
+  case blob:
+    return "blob";
+  }
+}

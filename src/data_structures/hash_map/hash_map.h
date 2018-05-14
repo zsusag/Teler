@@ -96,6 +96,9 @@ extern "C" {
   // Destroy an entire linked list (bucket)
   void list_destroy(list_t* l);
 
+  // Return the character representation of an enum
+  char* enum2string(type_t t);
+
   // This makes the header file work for both C and C++
 #ifdef __cplusplus
 }
