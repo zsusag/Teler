@@ -8,20 +8,35 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdbool.h>
+#include <zlib.h>
 
 #include "data_structures/hash_map/hash_map.h"
 #include "data_structures/tree/tree.h"
 #include "util.h"
 #include "teler.h"
 #include "commit.h"
+#include "compression.h"
+#include "stream.h"
 
 void traverse_commit(hash_map_t* h, char* object) {
   FILE* fp = NULL;
   open_object_file(&fp, object, "r");
 
+  // Declare a memstream and open it
+  stream_t s;
+  open_memstream_safe(&s);
+
+  // Decompress the entire file and write it to the memory stream
+  int ret;
+  if((ret = inf(fp, s.stream)) != Z_OK) {
+    zerr(ret);
+  }
+  fclose(fp);
+  rewind_memstream(&s);
+
   // Read each line of the file and recursively add objects to the hash map
   char* ln = NULL;
-  while(readline(&ln, fp) != -1) {
+  while(readline(&ln, s.stream) != -1) {
     metadata_t* md = (metadata_t*) malloc(sizeof(metadata_t));
     // Parse the line in the tree
     char* tmp = NULL;
@@ -51,6 +66,7 @@ void traverse_commit(hash_map_t* h, char* object) {
     }
   }
   free(ln);
+  close_memstream(&s);
 }
 
 void traverse_working_dir(hash_map_t* h, tnode_t* t, char* dir_path) {
@@ -163,16 +179,10 @@ void traverse_working_dir(hash_map_t* h, tnode_t* t, char* dir_path) {
         // Rewind the input file
         rewind(fp_input);
 
-        // Read the entire file in BLOCK_SIZE chunks and write it to the object
-        // file
-        while((block_len = fread(block, 1, BLOCK_SIZE, fp_input)) != 0) {
-          // Write the file in the working directory to the shadow directory
-          if(fwrite(block, 1, block_len, fp_output) != block_len) {
-            fprintf(stderr, "Unable to fully copy file to shadow directory\n");
-            exit(EXIT_FAILURE);
-          }
-          // Reset the block length to 0
-          block_len = 0;
+        // Compress the file into the shadow directory
+        int ret;
+        if((ret = def(fp_input, fp_output, Z_DEFAULT_COMPRESSION)) != Z_OK) {
+          zerr(ret);
         }
         // Close the output file
         fclose(fp_output);
@@ -212,16 +222,30 @@ bool populate_hash_table(hash_map_t* h) {
     // Close the file
     fclose(commit_fp);
     
-    // Open commit file and extract tree from it
-    open_object_file(&commit_fp, commit_hex, "r");
+    // Open commit file
+    open_object_file(&commit_fp, commit_hex, "rb");
+    
+    // Initialize stream to store commit file within it
+    stream_t s;
+    open_memstream_safe(&s);
+
+    // Decompress the commit file and store it into the stream
+    int ret;
+    if((ret = inf(commit_fp, s.stream)) != Z_OK) {
+        zerr(ret);
+    }
+    fclose(commit_fp);
+
+    // Rewind the stream to the beginning
+    rewind_memstream(&s);
 
     // Read in the first line of the commit containing the root of the tree
     free(commit_hex);
-    if(readline(&commit_hex, commit_fp) == 0) {
+    if(readline(&commit_hex, s.stream) == 0) {
       fprintf(stderr, "Commit is empty\n");
       exit(EXIT_FAILURE);
     }
-    fclose(commit_fp);
+    close_memstream(&s);
     char* commit_hex_hd = commit_hex; // NOTE: hack
 
     strtok(commit_hex, " ");
@@ -243,17 +267,6 @@ bool populate_hash_table(hash_map_t* h) {
 }
 
 void push() {
-  /* Steps:
-     1) Read in the latest commit and reconstruct its shadow structure getting all of the blobs
-     2) For each file within the working tree, hash it, and check to see if the hash is in the shadow tree.
-       - If so, the file is unchanged. We copy over the shadow version into the new commit tree
-       - If not, then the file is changed, new, or deleted. Either way, we disregard what was in the shadow tree
-         and add only the working tree version, if any. 
-   */
-
-  /* Two cases:
-     1) Initial commit, no refs/heads/master
-     2) Not initial commit*/
   // Allocate memory for a hash map to store all of the latest commits objects
   hash_map_t h;
   hash_map_init(&h);
