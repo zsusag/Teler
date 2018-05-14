@@ -4,9 +4,12 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <zlib.h>
 
 #include "commit.h"
 #include "util.h"
+#include "stream.h"
+#include "compression.h"
 
 void hash_commit(commit_t* c) {
   // Initialize the SHA1 hash
@@ -85,9 +88,21 @@ void write_commit(commit_t* c) {
   FILE* fp;
   open_object_file(&fp, c->hash, "w");
 
-  // Write the commit information to the file pointed to by fp
-  fprintf(fp, "tree %s\nparent %s\nauthor %s %s\n%s", c->tree,
+  // Open a memory stream
+  stream_t s;
+  open_memstream_safe(&s);
+
+  // Write the commit information to the memory stream
+  fprintf(s.stream, "tree %s\nparent %s\nauthor %s %s\n%s", c->tree,
           c->parent, c->author, c->timestamp, c->msg);
+  rewind_memstream(&s);
+
+  // Compress the commit file and write it to the shadow directory
+  int ret;
+  if((ret = def(s.stream, fp, Z_DEFAULT_COMPRESSION)) != Z_OK) {
+    zerr(ret);
+  }
+  close_memstream(&s);
   fclose(fp);
 
   // Open up refs/heads/master
