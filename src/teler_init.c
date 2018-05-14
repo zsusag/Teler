@@ -8,7 +8,7 @@
 #include <sys/types.h>
 
 #include "teler.h"
-
+#include "util.h"
 /* Things that init should do:
    1) Create an empty .teler directory in the current working directory
    2) Put an initial commit with nothing in it
@@ -63,7 +63,28 @@ void teler_init() {
       exit(EXIT_FAILURE);
     }
 
+    // Prompt user to enter name and email
+    char* name;
+    char* email;
+    printf("Please enter your name followed by <ENTER>: ");
+    readline(&name, stdin);
+    printf("Please enter your email followed by <ENTER>: ");
+    readline(&email, stdin);
+
+    char* config_path = (char*) malloc(strlen(cwd) + strlen("config") + 1);
+    strncpy(config_path, cwd, strlen(cwd));
+    strncat(config_path, "config", strlen("config"));
+
+    FILE* fp;
+    open_file(&fp, config_path, "w");
+
+    fprintf(fp, "%s %s", name, email);
+    fclose(fp);
+
     printf("Initialized empty teler repository in %s\n", cwd);
+    free(config_path);
+    free(name);
+    free(email);
     free(object_dir);
     free(refs_dir);
     free(refs_head_dir);
