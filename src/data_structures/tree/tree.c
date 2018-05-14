@@ -1,9 +1,12 @@
 #include <openssl/sha.h>
 #include <stdio.h>
+#include <zlib.h>
 
 #include "tree.h"
 #include "../hash_map/hash_map.h"
 #include "../../util.h"
+#include "../../stream.h"
+#include "../../compression.h"
 
 // Initialize a directory tree
 void dirtree_init(tnode_t* t) {
@@ -29,10 +32,27 @@ tnode_t* dirtree_get_latest(tnode_t* t) {
 
 // Traverse a directory tree, printing it out into the shadow directory
 void dirtree_traverse(tnode_t* t, hash_map_t* h) {
-  FILE* fp;
-  open_object_file(&fp, t->hash, "w");
+  // Initialize a memory stream
+  stream_t s;
+  open_memstream_safe(&s);
 
-  clist_traverse(t->children, h, fp);
+  // Traverse the list of children of the current node in the tree
+  clist_traverse(t->children, h, s.stream);
+
+  // Rewind the stream
+  rewind_memstream(&s);
+
+  // Open a file to the corresponding file within the shadow directory
+  FILE* fp;
+  open_object_file(&fp, t->hash, "wb");
+
+  // Compress the tree object to the directory
+  int ret;
+  if((ret = def(s.stream, fp, Z_DEFAULT_COMPRESSION)) != Z_OK) {
+    zerr(ret);
+  }
+  // Close the memory stream and file
+  close_memstream(&s);
   fclose(fp);
 }
 
