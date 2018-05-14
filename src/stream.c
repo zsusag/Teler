@@ -17,3 +17,11 @@ void close_memstream(stream_t* stream) {
   stream->size = 0;
 }
 
+void rewind_memstream(stream_t* stream) {
+  if(fflush(stream->stream) != 0) {
+    perror("Stream could not be flushed");
+    exit(EXIT_FAILURE);
+  }
+  rewind(stream->stream);
+}
+

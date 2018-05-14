@@ -13,4 +13,6 @@ void open_memstream_safe(stream_t* stream);
 
 void close_memstream(stream_t* stream);
 
+void rewind_memstream(stream_t* stream);
+
 #endif
