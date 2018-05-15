@@ -14,9 +14,9 @@ This will place a `teler` executable within `./bin/`. Copy this file, if desired
 | Command | Description |
 | --- | --- |
 | `teler init` | Create a empty `teler` repository at the current working directory. |
-| Push | Track, save, and tag all changes as a commit. |
-| Pull | Load the latest commit into the root of the repository. Use with the `-c` option allows the user to specify a certain commit to load. |
-| History | Print to `stdout` the history of commits of the repository, latest to earliest. |
+| `teler push` | Track, save, and tag all changes as a commit. |
+| `teler pull` | Load the latest commit into the root of the repository. Use with the `-c` option allows the user to specify a certain commit to load. |
+| `teler history` | Print to `stdout` the history of commits of the repository, latest to earliest. |
 ## Usage Example
 First navigate to a desired directory in which you would like to create a `teler` repository. Once within the directory,
 execute
@@ -41,6 +41,8 @@ If you would like to revert the repository to one of these previous commits, run
 teler pull -c <commit>
 ```
 where `<commit>` is the hash of the commit found by running `teler history`. If you would simply like to revert the repository to the latest
-commit, omit the `-c` flag. **NOTE:** Running `teler pull` will remove all files within the repository which are not committed.
+commit, omit the `-c` flag.
+
+**NOTE:** Running `teler pull` will remove all files within the repository which are not committed.
 ## Contributors
 Hadley Luker [lukerhad] and Zachary J. Susag [susagzac]. All code was written collaboratively using pair programming.
