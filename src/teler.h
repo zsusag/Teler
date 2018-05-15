@@ -12,7 +12,7 @@ void teler_init();
 void push();
 
 // Pull the latest commit into the working directory
-void pull();
+void pull(char* commit);
 
 // Print out the entire history of the repository
 void history();

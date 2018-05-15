@@ -8,9 +8,12 @@
 #include <string.h>
 #include <openssl/sha.h>
 #include <time.h>
+#include <zlib.h>
 
 #include "data_structures/hash_map/hash_map.h"
 #include "util.h"
+#include "stream.h"
+#include "compression.h"
 
 // Define different areas within the shadow directory
 #define SHADOW_DIR "/.teler/"
@@ -204,4 +207,64 @@ char* construct_filepath(char* prefix, char* suffix) {
   strncat(ret, "/", 1);
   strncat(ret, suffix, strlen(suffix));
   return ret;
+}
+
+bool valid_commit(char* file) {
+  if(file == NULL) {
+    return true;
+  }
+  // Construct the path
+  char* file_path = get_objects_dir();
+
+  // Grow the length of the file path to fit in subdirectory
+  size_t file_len = strlen(file);
+  file_path = (char*) realloc(file_path, strlen(file_path) + file_len + 2);
+
+  // Concatenate on the first byte of the file
+  strncat(file_path, file, 2);
+  strncat(file_path, "/", 1);
+  //  file_path[strlen(file_path)] = '/';
+
+  // Construct the remaining path
+  strncat(file_path, file + 2, 38);
+
+  // Put the null byte at the end
+  file_path[strlen(file_path) + file_len] = '\0';
+  
+  struct stat st_file = {0};
+  if(stat(file_path, &st_file) == -1) {
+    free(file_path);
+    return false;
+  }
+
+  FILE* fp;
+  open_file(&fp, file_path, "r");
+
+  stream_t s;
+  open_memstream_safe(&s);
+
+  int ret;
+  if((ret = inf(fp, s.stream)) != Z_OK) {
+    zerr(ret);
+  }
+  fclose(fp);
+  rewind_memstream(&s);
+
+  char* ln;
+  if(readline(&ln, s.stream) == 0) {
+    close_memstream(&s);
+    free(file_path);
+    free(ln);
+    return false;
+  } if (strncmp(ln, "tree", 4) != 0) {
+    close_memstream(&s);
+    free(file_path);
+    free(ln);
+    return false;
+  } else {
+    close_memstream(&s);
+    free(file_path);
+    free(ln);
+    return true;
+  }
 }
