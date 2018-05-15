@@ -69,6 +69,7 @@ int main (int argc, char **argv) {
       break;
     } else if (!strncmp(argv[1], "pull", 4)) {
       argp_parse(&pull_argp, argc-1, argv+1, 0, 0, &arguments);
+      pull();
       break;
     } else if (!strncmp(argv[1], "push", 4)) {
       argp_parse(&push_argp, argc-1, argv+1, 0, 0, &arguments);
@@ -76,6 +77,9 @@ int main (int argc, char **argv) {
       break;
     } else if (!strncmp(argv[1], "init", 4)) {
       teler_init();
+      break;
+    } else if (!strncmp(argv[1], "history", 7)) {
+      history();
       break;
     } else {
       printf("%s is not a command.\n", argv[1]);
@@ -93,11 +97,13 @@ void print_basic_usage() {
   puts("Usage: teler <command>");
   puts("teler: a streamlined version control system");
   puts("");
-  puts("Commands");
+  puts("Commands:");
+  puts("\tinit\tInitialize a teler repository");
   puts("\tpull\tPull all your data from your default repo");
   puts("\t\t-f, --from=repo\t\tPull from a specific repo");
   puts("\t\t-x, --files=files\tPull specific files");
   puts("\tpush\tPush all your data of your default repo");
   puts("\t\t-t, --to=repo\t\tPush to a specific repo");
   puts("\t\t-x, --files=files\tPush specific files");
+  puts("\thistory\tPrint out the full commit history");
 }

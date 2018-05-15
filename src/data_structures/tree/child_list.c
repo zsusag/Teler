@@ -1,9 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <zlib.h>
 
 #include "../../util.h"
 #include "tree.h"
+#include "../../compression.h"
 
 // Initialize a child list
 void clist_init(clist_t* c) {
@@ -88,5 +91,47 @@ void clist_traverse(clist_t* c, hash_map_t* h, FILE* fp) {
 
     // Advance cur
     cur = cur->next;
+  }
+}
+
+void clist_reconstruct_working_dir(clist_t* c, hash_map_t* h, char* path) {
+  cnode_t* cur = c->head;
+  while(cur != NULL) {
+    // Retreive the metadata information for the given file
+    metadata_t* md = hash_map_get(h, dirtree_get_hash(cur->child));
+
+    // Construct the filepath
+    char* filepath = construct_filepath(path, md->filename);
+    
+    // If the current child is a blob, decompress it and place it in the working dir
+    if(md->type == blob) {
+      // Open the file in the working for writing in binary mode
+      FILE* output;
+      open_file(&output, filepath, "wb");
+
+      // Open the file in the shadow directory for reading in binary mode
+      FILE* input;
+      open_object_file(&input, dirtree_get_hash(cur->child), "rb");
+
+      // Decompress the file and write it to the file pointed to by output
+      int ret;
+      if((ret = inf(input, output)) != Z_OK) {
+        zerr(ret);
+      }
+
+      // Change the permissions to the ones that are stored
+      if(chmod(filepath, md->perm) != 0) {
+        perror("Unable to change permissions of file");
+        exit(EXIT_FAILURE);
+      }
+    } else {
+      // Else, it is a tree, and so recurse down
+      dirtree_reconstruct_working_dir(cur->child, h, filepath);
+    }
+    // Advance the cursor
+    cur = cur->next;
+
+    // Free filepath
+    free(filepath);
   }
 }

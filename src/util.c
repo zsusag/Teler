@@ -195,3 +195,13 @@ char* get_timestamp() {
   strftime(ret, 200, "%s %z", lt);
   return ret;
 }
+
+char* construct_filepath(char* prefix, char* suffix) {
+  size_t ret_len = strlen(prefix) + strlen(suffix) + 2;
+  char* ret = (char*) malloc(ret_len);
+  memset(ret, '\0', ret_len);
+  strncat(ret, prefix, strlen(prefix));
+  strncat(ret, "/", 1);
+  strncat(ret, suffix, strlen(suffix));
+  return ret;
+}

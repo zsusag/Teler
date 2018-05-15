@@ -52,6 +52,9 @@ void dirtree_traverse(tnode_t* t, hash_map_t* h);
 // Hash a interior node by hashing all of the children together
 void dirtree_hash(tnode_t* t, hash_map_t* h);
 
+// Traverse the tree, writing the tree to the working directory
+void dirtree_reconstruct_working_dir(tnode_t* t, hash_map_t* h, char* path);
+
 // Initialize a child list
 void clist_init(clist_t* c);
 
@@ -69,4 +72,7 @@ void clist_hash(clist_t* c, hash_map_t*h, SHA_CTX* sha);
 
 // Traverse a child list
 void clist_traverse(clist_t* c, hash_map_t* h, FILE* fp);
+
+// Traverse a child list, writing the list to the working directory
+void clist_reconstruct_working_dir(clist_t* c, hash_map_t* h, char* path);
 #endif
