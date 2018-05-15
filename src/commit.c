@@ -86,7 +86,7 @@ void destroy_commit(commit_t* c) {
 void write_commit(commit_t* c) {
   // Open the object file which will contain the commit
   FILE* fp;
-  open_object_file(&fp, c->hash, "w");
+  open_object_file(&fp, c->hash, "wb");
 
   // Open a memory stream
   stream_t s;
