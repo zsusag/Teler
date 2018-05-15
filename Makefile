@@ -17,7 +17,7 @@ OBJEXT      := o
 
 #Flags, Libraries and Includes
 CFLAGS      := -Wall -O3 -g
-LIB         := -lssl -lcrypto
+LIB         := -lssl -lcrypto -lz
 
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
