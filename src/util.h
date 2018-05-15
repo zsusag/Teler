@@ -32,4 +32,6 @@ char* bin2hex(const unsigned char* bin, size_t len);
 char* get_timestamp();
 
 char* construct_filepath(char* prefix, char* suffix);
+
+bool valid_commit(char* file);
 #endif
