@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <zlib.h>
+#include "zlib.h"
 
 #include "compression.h"
 
@@ -37,7 +37,7 @@ int def(FILE *source, FILE *dest, int level)
             (void)deflateEnd(&strm);
             return Z_ERRNO;
         }
-        flush = feof(source) ? Z_FINISH : Z_NO_FLUSH;
+        flush = (feof(source) || strm.avail_in == 0) ? Z_FINISH : Z_NO_FLUSH;
         strm.next_in = in;
 
         /* run deflate() on input until output buffer not full, finish
