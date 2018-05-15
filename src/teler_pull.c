@@ -7,10 +7,16 @@
 #include "revert.h"
 #include "util.h"
 
-void pull() {
+void pull(char* c) {
+  // Check to see if c is a valid commit
+  if(!valid_commit(c)) {
+    fprintf(stderr, "%s is not a valid commit\n", c);
+    exit(EXIT_FAILURE);
+  }
+
   // Get the information about the latest commit, if there is one
   commit_t* commit;
-  if((commit = reconstruct_commit(NULL)) == NULL) {
+  if((commit = reconstruct_commit(c)) == NULL) {
     fprintf(stderr, "No commits are present within the repository.\n");
     exit(EXIT_FAILURE);
   }
