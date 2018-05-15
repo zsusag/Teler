@@ -1,4 +1,4 @@
-\documentclass[12pt, letterpaper]{article}
+\documentclass[11pt, letterpaper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{mathpartir}
@@ -7,7 +7,7 @@
 \usepackage[tt=false, type1=true]{libertine}
 \usepackage[libertine]{newtxmath}
 \usepackage[margin=1.0in]{geometry}
-\usepackage{hyperref}
+\usepackage[pdftex, bookmarks=true]{hyperref}
 \usepackage{pgfplots}
 \usepackage[shortlabels]{enumitem}
 \usepackage{tikz}
@@ -19,13 +19,10 @@
 
 
 \begin{document}
-% \tikzstyle{every node}=[draw=black,thick,anchor=west]
-% \tikzstyle{a}=[draw=red,fill=red!30]
-% \tikzstyle{b}=[draw=blue,fill=blue!30]
-% \tikzstyle{c}=[draw=green,fill=green!30]
-% \tikzstyle{d}=[draw=orange,fill=orange!30]
-% \tikzstyle{e}=[draw=purple,fill=purple!30]
-% \tikzstyle{f}=[fill=grey!50]
+\hypersetup{ pdfauthor={Hadley Luker and Zachary J. Susag}, pdftitle={  \textsc{teler}: A Streamlined Version Control System\\
+  \large Project Report},
+  pdfcreator={LaTeX with hyperref package}, pdfproducer={dvips +
+    ps2pdf} }
 
 \newcommand{\FTdir}{}
 \def\FTdir(#1,#2,#3){%
@@ -74,7 +71,7 @@
 
   \begin{enumerate}
   \item \texttt{git add .}
-  \item \texttt{git commit -m "Fixed bug."}
+  \item \texttt{git commit -m "xkcd.com/1296"}
   \item \texttt{git push}
   \end{enumerate}
 
@@ -114,7 +111,7 @@
 
   \subsection{Design}
   \label{subsec:design}
-  The use of textsc{teler} depends mostly on two key commands,
+  The use of \textsc{teler} depends mostly on two key commands,
   \texttt{push} and \texttt{pull}.
 
   \subsubsection{\texttt{teler push}}
@@ -182,7 +179,7 @@
         \FTdir(\FTroot,root,.){ % root: parent = \FTroot
           \FTdir(root,src,\textcolor{red}{src}){ % normal dir: (parentID, currentID, label)
             \FTfile(src,\textcolor{blue}{teler.c}) % file: (parentID, label)
-          } \FTdir(root,foo,\textcolor{green}{foo}){
+          } \FTdir(root,foo,\textcolor{olive}{foo}){
             \FTfile(foo,\textcolor{orange}{bar.c}) }
           \FTfile(root,\textcolor{purple}{README.md})
           \FTdir(root,papers,papers){} };
@@ -203,7 +200,7 @@
             \FTdir(objects,fa,fa) {
               \FTfile(fa,\textcolor{blue}{7c5bb8a\ldots}) }
             \FTdir(objects,6b,6b) {
-              \FTfile(6b,\textcolor{green}{42abcc8\ldots}) }
+              \FTfile(6b,\textcolor{olive}{42abcc8\ldots}) }
             \FTdir(objects,ae,ae) {
               \FTfile(ae,\textcolor{orange}{183d7e\ldots}) } }
           \FTfile(root,config) };
