@@ -93,7 +93,7 @@ void write_commit(commit_t* c) {
   open_memstream_safe(&s);
 
   // Write the commit information to the memory stream
-  fprintf(s.stream, "tree %s\nparent %s\nauthor %s %s\n%s", c->tree,
+  fprintf(s.stream, "tree %s\nparent %s\nauthor %s\n%s\n%s", c->tree,
           c->parent, c->author, c->timestamp, c->msg);
   rewind_memstream(&s);
 
