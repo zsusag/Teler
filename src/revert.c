@@ -69,7 +69,7 @@ commit_t* reconstruct_commit(char* given_commit) {
   commit_t* c = (commit_t*) malloc(sizeof(commit_t));
 
   // Parse the information within the buffer.
-  sscanf(s.buf, "tree %ms\nparent %ms\nauthor %ms\n%ms\n%ms", &(c->tree), &(c->parent),
+  sscanf(s.buf, "tree %ms\nparent %ms\nauthor %m[^\n]\n%m[^\n]\n%m[^\n]", &(c->tree), &(c->parent),
          &(c->author), &(c->timestamp), &(c->msg));
   c->hash = commit;
 
