@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <zlib.h>
 
+#include "revert.h"
 #include "data_structures/hash_map/hash_map.h"
 #include "data_structures/tree/tree.h"
 #include "util.h"
@@ -209,59 +210,26 @@ void traverse_working_dir(hash_map_t* h, tnode_t* t, char* dir_path) {
 }
 
 bool populate_hash_table(hash_map_t* h) {
-  // Get the pathname for heads directory
-  char* commit = get_latest_commit("master");
-
-  FILE* commit_fp = NULL;
-  if((commit_fp = fopen(commit, "r")) != NULL) {
-    // If this is not the first commit, read in the latest commit
-    char* commit_hex = NULL;
-    if(readline(&commit_hex, commit_fp) == 0) {
-      fprintf(stderr, "%s is empty. Something went wrong...\n", commit);
-      exit(EXIT_FAILURE);
-    }
-    // Close the file
-    fclose(commit_fp);
-    
-    // Open commit file
-    open_object_file(&commit_fp, commit_hex, "rb");
-    
-    // Initialize stream to store commit file within it
-    stream_t s;
-    open_memstream_safe(&s);
-
-    // Decompress the commit file and store it into the stream
-    int ret;
-    if((ret = inf(commit_fp, s.stream)) != Z_OK) {
-        zerr(ret);
-    }
-    fclose(commit_fp);
-
-    // Rewind the stream to the beginning
-    rewind_memstream(&s);
-
-    // Read in the first line of the commit containing the root of the tree
-    free(commit_hex);
-    if(readline(&commit_hex, s.stream) == 0) {
-      fprintf(stderr, "Commit is empty\n");
-      exit(EXIT_FAILURE);
-    }
-    close_memstream(&s);
-    char* commit_hex_hd = commit_hex; // NOTE: hack
-
-    strtok(commit_hex, " ");
-    commit_hex = strtok(NULL, " ");
-
+  // Retrieve the commit information for the latest commit
+  commit_t* c = reconstruct_commit(NULL);
+  if(c != NULL) {
+    // This is not the first commit
     // Add the root of the tree to the hash map
     metadata_t* cur_md = (metadata_t*) malloc(sizeof(metadata_t));
     cur_md->perm = S_IFDIR;
     cur_md->filename = ".";
     cur_md->type = tree;
-    hash_map_set(h, commit_hex, cur_md);
+    hash_map_set(h, c->hash, cur_md);
 
     // Recursively add the entire commit structure to the hash map
-    traverse_commit(h, commit_hex);
-    free(commit_hex_hd);
+    traverse_commit(h, c->tree);
+
+    // Free the unnecessary elements of the commit
+    free(c->tree);
+    free(c->parent);
+    free(c->author);
+    free(c->timestamp);
+    free(c->msg);
     return false;
   }
   return true;
