@@ -20,7 +20,7 @@
 
 void traverse_commit(hash_map_t* h, char* object) {
   FILE* fp = NULL;
-  open_object_file(&fp, object, "r");
+  open_object_file(&fp, object, "rb");
 
   // Declare a memstream and open it
   stream_t s;
@@ -41,7 +41,7 @@ void traverse_commit(hash_map_t* h, char* object) {
     // Parse the line in the tree
     char* tmp = NULL;
     tmp = strtok(ln, " ");
-    md->perm = (mode_t) tmp;
+    md->perm = (mode_t) strtoul(tmp, NULL, 8);
     tmp = strtok(NULL, " ");
     md->type = convert_to_type(tmp);
 
@@ -55,7 +55,8 @@ void traverse_commit(hash_map_t* h, char* object) {
 
     // Copy the filename into the metadata struct
     md->filename = (char*) malloc(strlen(tmp) + 1);
-    strncpy(md->filename, tmp, strlen(tmp));
+    memset(md->filename, '\0', strlen(tmp) + 1);
+    memcpy(md->filename, tmp, strlen(tmp));
 
     // Add the current object to the hash map
     hash_map_set(h, next_object, md);
