@@ -30,4 +30,6 @@ void sha1_update_safe(SHA_CTX* c, const void* data, size_t len);
 char* bin2hex(const unsigned char* bin, size_t len);
 
 char* get_timestamp();
+
+char* construct_filepath(char* prefix, char* suffix);
 #endif
