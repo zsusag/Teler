@@ -43,4 +43,4 @@ teler pull -c <commit>
 where `<commit>` is the hash of the commit found by running `teler history`. If you would simply like to revert the repository to the latest
 commit, omit the `-c` flag. **NOTE:** Running `teler pull` will remove all files within the repository which are not committed.
 ## Contributors
-Hadley Luker [lukerhad] and Zachary J. Susag [susagzac]
+Hadley Luker [lukerhad] and Zachary J. Susag [susagzac]. All code was written collaboratively using pair programming.
