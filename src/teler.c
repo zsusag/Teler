@@ -15,6 +15,7 @@ static char doc[] = "teler: a streamlined version control system";
 
 static struct argp_option pull_options[] =
   {
+    {"commit",'c', "commit",0, "Pull a specific commit"},
     {"files", 'x', "files", 0, "Pull specific files"},
     {"from",  'f', "repo",  0, "Pull from a specific repo"},
     {0}
@@ -30,25 +31,29 @@ static struct argp_option push_options[] =
 struct arguments {
   char *args[2];
   char *repo;
+  char *commit;
   char *files; // TODO: array
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
   struct arguments *arguments = state->input;
   switch (key) {
-    case 'x':
-      arguments->files = arg;
-      puts(arguments->files);
-      break;
-    case 'f': case 't':
-      arguments->repo = arg;
-      puts(arguments->repo);
-      break;
-    case ARGP_KEY_ARG:
-      puts("too many args");
-      break;
-    default:
-      return ARGP_ERR_UNKNOWN;
+  case 'x':
+    arguments->files = arg;
+    puts(arguments->files);
+    break;
+  case 'c':
+    arguments->commit = arg;
+    break;
+  case 'f': case 't':
+    arguments->repo = arg;
+    puts(arguments->repo);
+    break;
+  case ARGP_KEY_ARG:
+    puts("too many args");
+    break;
+  default:
+    return ARGP_ERR_UNKNOWN;
   }
   return 0;
 }
@@ -69,7 +74,7 @@ int main (int argc, char **argv) {
       break;
     } else if (!strncmp(argv[1], "pull", 4)) {
       argp_parse(&pull_argp, argc-1, argv+1, 0, 0, &arguments);
-      pull();
+      pull(arguments.commit);
       break;
     } else if (!strncmp(argv[1], "push", 4)) {
       argp_parse(&push_argp, argc-1, argv+1, 0, 0, &arguments);
