@@ -13,4 +13,7 @@ void push();
 
 // Pull the latest commit into the working directory
 void pull();
+
+// Print out the entire history of the repository
+void history();
 #endif

@@ -78,6 +78,9 @@ int main (int argc, char **argv) {
     } else if (!strncmp(argv[1], "init", 4)) {
       teler_init();
       break;
+    } else if (!strncmp(argv[1], "history", 7)) {
+      history();
+      break;
     } else {
       printf("%s is not a command.\n", argv[1]);
       print_basic_usage();
