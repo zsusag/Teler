@@ -172,4 +172,10 @@ void clear_working_dir(char* path) {
     // Clean up
     free(f_path);
   }
+  // Close the directory
+  if(closedir(dir) != 0) {
+    perror("Unable to close directory");
+    exit(EXIT_FAILURE);
+  }
+
 }

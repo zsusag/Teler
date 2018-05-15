@@ -207,6 +207,11 @@ void traverse_working_dir(hash_map_t* h, tnode_t* t, char* dir_path) {
       dirtree_insert(t, hash_tree);
     }
   }
+  // Close the directory
+  if(closedir(dir) != 0) {
+    perror("Unable to close directory");
+    exit(EXIT_FAILURE);
+  }
 }
 
 bool populate_hash_table(hash_map_t* h) {
