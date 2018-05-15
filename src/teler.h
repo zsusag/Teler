@@ -11,4 +11,6 @@ void teler_init();
 // Push commits to the shadow directory and to remotes
 void push();
 
+// Pull the latest commit into the working directory
+void pull();
 #endif

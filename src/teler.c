@@ -69,6 +69,7 @@ int main (int argc, char **argv) {
       break;
     } else if (!strncmp(argv[1], "pull", 4)) {
       argp_parse(&pull_argp, argc-1, argv+1, 0, 0, &arguments);
+      pull();
       break;
     } else if (!strncmp(argv[1], "push", 4)) {
       argp_parse(&push_argp, argc-1, argv+1, 0, 0, &arguments);
