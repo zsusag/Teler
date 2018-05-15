@@ -16,15 +16,11 @@ static char doc[] = "teler: a streamlined version control system";
 static struct argp_option pull_options[] =
   {
     {"commit",'c', "commit",0, "Pull a specific commit"},
-    {"files", 'x', "files", 0, "Pull specific files"},
-    {"from",  'f', "repo",  0, "Pull from a specific repo"},
     {0}
   };
 
 static struct argp_option push_options[] =
   {
-    {"files", 'x', "files", 0, "Push specific files"},
-    {"to",    't', "repo",  0, "Push to a specific repo"},
     {0}
   };
 
@@ -105,10 +101,7 @@ void print_basic_usage() {
   puts("Commands:");
   puts("\tinit\tInitialize a teler repository");
   puts("\tpull\tPull all your data from your default repo");
-  puts("\t\t-f, --from=repo\t\tPull from a specific repo");
-  puts("\t\t-x, --files=files\tPull specific files");
+  puts("\t\t-c\tPull a specific commit");
   puts("\tpush\tPush all your data of your default repo");
-  puts("\t\t-t, --to=repo\t\tPush to a specific repo");
-  puts("\t\t-x, --files=files\tPush specific files");
   puts("\thistory\tPrint out the full commit history");
 }
