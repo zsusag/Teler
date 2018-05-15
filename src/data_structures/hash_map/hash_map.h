@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 // Define an initial capacity for the hash table
-#define INIT_CAPACITY 32
+#define INIT_CAPACITY 1000
 
 // This makes the header file work for both C and C++
 #ifdef __cplusplus

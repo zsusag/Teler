@@ -24,6 +24,8 @@ bool list_insert(list_t* l, const char* key, metadata_t* val) {
      and return. */
   node_t* cur = l->head;
   while(cur != NULL) {
+    printf("cur->key null? %s\n", (cur->key == NULL) ? "true" : "false");
+    printf("cur->key: %s; key: %s\n", cur->key, key);
     if(strcmp(cur->key,key) == 0) {
       cur->val = val;
       return false;
