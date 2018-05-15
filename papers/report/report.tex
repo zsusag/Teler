@@ -136,6 +136,22 @@ do and how we use ***
 
 \section{Evaluation}
 \label{sec:evaluation}
+To evaluate \textsc{teler} we compared its speed in generating commits
+through \textsc{teler push} with Git. For hardware we used an Intel
+Core i5-3320M at 3.3GHz with 8GB of RAM with a 320GB spinning hard
+disk. The workstation we used to evaluate \textsc{teler} was running
+Arch Linux with kernal version x86_64 Linux 4.16.8-1-ARCH. We
+collected the running times of Git and \textsc{teler} using the
+\texttt{time} command.
+
+To fairly assess each program we generated a random directory with a
+maximum depth per directory of 3, up to 4 first-level directories, and
+up to 6 maximum children per directory. We then recorded the time it
+took for each program to make a commit of the entire directory. This
+was done ten times with a new subdirectory of the same specifications
+being made, increasing the size of the total directory each time.
+During this process we also recorded the total size of the directory
+in bytes.
 
 
 \end{document}
